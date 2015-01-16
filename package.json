@@ -1,0 +1,36 @@
+{
+  "name": "twigify",
+  "version": "0.0.1",
+  "description": "Browserify transform for pre-compiled Twig.js templates (with HTML minification)",
+  "keywords": [
+    "template",
+    "browserify",
+    "browserify-transform",
+    "transform",
+    "minifier",
+    "minify",
+    "twig",
+    "twigjs",
+    "twig.js"
+  ],
+  "homepage": "https://github.com/dane-harnett/twigify",
+  "author": "Dane Harnett <dane@daneharnett.com>",
+  "bugs": "https://github.com/dane-harnett/twigify/issues",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dane-harnett/twigify.git"
+  },
+  "dependencies": {
+    "html-minifier": "^0.6.9",
+    "through2": "^0.6.3",
+    "twig": "^0.7.2"
+  },
+  "devDependencies": {
+  },
+  "engines": {
+    "node": ">=0.10"
+  },
+  "scripts": {
+  }
+}
