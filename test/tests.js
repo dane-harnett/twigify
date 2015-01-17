@@ -36,6 +36,7 @@ describe('Twigify', function() {
     it ('should be a function', function() {
       twigify.should.be.an.instanceOf(Function);
     });
+
     it('should render templates minified', function() {
       var testMe = twigify.compile('a       bc');
       testMe = render(testMe);
@@ -43,11 +44,21 @@ describe('Twigify', function() {
       testMe.should.equal('a bc');
     });
 
-  });
+    it('should render variables within the Twig template', function() {
+      var testMe = twigify.compile('hey {{ name }}');
+      testMe = render(testMe, {
+        name: 'Scott'
+      });
 
-  describe('#compile()', function() {
-    it('should return a minified version of the input', function() {
-
+      testMe.should.equal('hey Scott');
     });
+
+    it('should load and render a test file', function() {
+      var testMe = twigify('test/example.html.twig');
+      console.log(testMe);
+
+      testMe.should.equal('this is a test, with some variable PLACEHOLDER!');
+    });
+
   });
 });
