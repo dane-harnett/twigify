@@ -22,17 +22,6 @@ var render = function(twigifyRender, twigVars) {
 
 describe('Twigify', function() {
   describe('#twigify()', function() {
-    it('should describe what the function does', function() {
-      twigify();
-    });
-  });
-
-  describe('#process()', function() {
-    it('should describe what the function does', function() {
-    });
-  });
-
-  describe('#twigify()', function() {
     it ('should be a function', function() {
       twigify.should.be.an.instanceOf(Function);
     });
