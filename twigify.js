@@ -14,7 +14,9 @@ var minifyDefaults = {
 function compile(str) {
   var minified = minify(str, minifyDefaults);
 
-  var template = twig({ data: minified });
+  var template = twig({
+    data: minified
+  });
 
   var tokens = JSON.stringify(template.tokens)
 

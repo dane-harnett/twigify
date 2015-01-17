@@ -27,10 +27,13 @@
     "twig": "^0.7.2"
   },
   "devDependencies": {
+    "mocha": "*",
+    "should": "*"
   },
   "engines": {
     "node": ">=0.10"
   },
   "scripts": {
+    "test": "mocha"
   }
 }
