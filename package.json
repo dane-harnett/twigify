@@ -28,12 +28,13 @@
   },
   "devDependencies": {
     "mocha": "*",
-    "should": "*"
+    "should": "*",
+    "istanbul": "*"
   },
   "engines": {
     "node": ">=0.10"
   },
   "scripts": {
-    "test": "mocha"
+    "test": "istanbul cover _mocha -- -R spec && mocha"
   }
 }
