@@ -11,25 +11,53 @@ var minifyDefaults = {
   collapseWhitespace: true
 };
 
-function compile(str) {
+function compile(id, str) {
   var minified = minify(str, minifyDefaults);
 
-  var template = twig({ data: minified });
+  var template = twig({ id: id, data: minified });
 
   var tokens = JSON.stringify(template.tokens)
 
-  return 'twig({ data:' + tokens + ', precompiled: true })';
+  var includes = [];
+
+  // create a list of includes
+  for (var i = template.tokens.length - 1; i >= 0; i--) {
+    if (template.tokens[i].type === 'logic') {
+      if (template.tokens[i].token.type === 'Twig.logic.type.include') {
+        // includes at this level must be relative to the current template file path
+        includes.push(template.tokens[i].token.stack[0].value.replace('/templates/', './'));
+      }
+    }
+  }
+
+  return {
+    includes: includes,
+    // the id will be the filename and path relative to the require()ing module
+    source: 'twig({ id: __filename,  data:' + tokens + ', precompiled: true, allowInlineIncludes: true })'
+  };
 }
 
-function process(source) {
+function process(tpl) {
+  // build a string that require()s all the sub templates
+  var includeString = '';
+  for (var i = tpl.includes.length - 1; i >= 0; i--) {
+    includeString += 'require(\'' + tpl.includes[i] + '\');\n';
+  }
+
   return (
-    'var twig = require(\'twig\');\n' +
-    'module.exports = function(data) { return ' + source + '.render(data) };\n'
+    'var twig = require(\'twig\').twig;\n' +
+    includeString +
+    'module.exports = ' + tpl.source + ';\n'
   );
 }
 
-function twigify(file) {
+function twigify(file, opts) {
   if (!ext.test(file)) return through();
+  if (!opts) opts = {};
+
+  var id = file;
+  // might pass a path via CLI to use for relative file paths
+  //opts.path ? file.replace(opts.path, '') : file;
 
   var buffers = [];
 
@@ -43,7 +71,7 @@ function twigify(file) {
     var compiledTwig;
 
     try {
-      compiledTwig = compile(str);
+      compiledTwig = compile(id, str);
     } catch(e) {
       return this.emit('error', e);
     }
