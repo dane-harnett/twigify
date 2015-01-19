@@ -49,4 +49,4 @@ $('body').html(page);
 #### Transforming with the command-line ####
 
 ```bash
-browserify test.js -t jstify > test-bundle.js
+browserify test.js -t twigify > test-bundle.js
