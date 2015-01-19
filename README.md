@@ -50,3 +50,4 @@ $('body').html(page);
 
 ```bash
 browserify test.js -t twigify > test-bundle.js
+```
