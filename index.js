@@ -19,7 +19,7 @@ function compile(id, str) {
     data: minified
   });
 
-  var tokens = JSON.stringify(template.tokens)
+  var tokens = JSON.stringify(template.tokens);
 
   // the id will be the filename and path relative to the require()ing module
   return 'twig({ id: __filename,  data:' + tokens + ', precompiled: true, allowInlineIncludes: true })';
@@ -27,7 +27,8 @@ function compile(id, str) {
 
 function process(source) {
   return (
-    'module.exports = ' + tpl.source + ';\n'
+    'var twig = require(\'twig\').twig;\n' +
+    'module.exports = ' + source + ';\n'
   );
 }
 
