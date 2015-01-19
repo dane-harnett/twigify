@@ -11,25 +11,34 @@ var minifyDefaults = {
   collapseWhitespace: true
 };
 
-function compile(str) {
+function compile(id, str) {
   var minified = minify(str, minifyDefaults);
 
-  var template = twig({ data: minified });
+  var template = twig({
+    id: id,
+    data: minified
+  });
 
-  var tokens = JSON.stringify(template.tokens)
+  var tokens = JSON.stringify(template.tokens);
 
-  return 'twig({ data:' + tokens + ', precompiled: true })';
+  // the id will be the filename and path relative to the require()ing module
+  return 'twig({ id: __filename,  data:' + tokens + ', precompiled: true, allowInlineIncludes: true })';
 }
 
 function process(source) {
   return (
-    'var twig = require(\'twig\');\n' +
-    'module.exports = function(data) { return ' + source + '.render(data) };\n'
+    'var twig = require(\'twig\').twig;\n' +
+    'module.exports = ' + source + ';\n'
   );
 }
 
-function twigify(file) {
+function twigify(file, opts) {
   if (!ext.test(file)) return through();
+  if (!opts) opts = {};
+
+  var id = file;
+  // @TODO: pass a path via CLI to use for relative file paths
+  //opts.path ? file.replace(opts.path, '') : file;
 
   var buffers = [];
 
@@ -43,7 +52,7 @@ function twigify(file) {
     var compiledTwig;
 
     try {
-      compiledTwig = compile(str);
+      compiledTwig = compile(id, str);
     } catch(e) {
       return this.emit('error', e);
     }
