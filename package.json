@@ -1,6 +1,6 @@
 {
   "name": "twigify",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Browserify transform for pre-compiled Twig.js templates (with HTML minification)",
   "keywords": [
     "template",
@@ -26,11 +26,9 @@
     "through2": "^0.6.3",
     "twig": "^0.7.2"
   },
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "engines": {
     "node": ">=0.10"
   },
-  "scripts": {
-  }
+  "scripts": {}
 }
