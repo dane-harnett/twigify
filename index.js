@@ -22,7 +22,7 @@ function compile(id, str) {
   var tokens = JSON.stringify(template.tokens);
 
   // the id will be the filename and path relative to the require()ing module
-  return 'twig({ id: __filename, path: __dirname,  data:' + tokens + ', precompiled: true, allowInlineIncludes: true })';
+  return 'twig({ id: __filename, path: __dirname, data:' + tokens + ', precompiled: true, allowInlineIncludes: true })';
 }
 
 function process(source) {
