@@ -11,7 +11,7 @@ var minifyDefaults = {
   collapseWhitespace: true
 };
 
-function compile(id, str) {
+function compileToObject(id, str) {
   var minified = minify(str, minifyDefaults);
 
   var template = twig({
@@ -22,14 +22,19 @@ function compile(id, str) {
   var tokens = JSON.stringify(template.tokens);
 
   // the id will be the filename and path relative to the require()ing module
-  return 'twig({ id: __filename, path: __dirname, data:' + tokens + ', precompiled: true, allowInlineIncludes: true })';
+  return '{ id: __filename, path: __dirname, data:' + tokens + ', precompiled: true, allowInlineIncludes: true }';
 }
 
-function process(source) {
+function process(source, opts) {
   return (
     'var twig = require(\'twig\').twig;\n' +
-    'module.exports = ' + source + ';\n'
+    'var transform = ' + (opts.transform || 'function(x) { return x; }') + ';\n' +
+    'module.exports = twig(transform(' + source + '));\n'
   );
+}
+
+function compile(id, str) {
+  return 'twig(' + compileToObject(id, str) + ')';
 }
 
 function twigify(file, opts) {
@@ -52,12 +57,12 @@ function twigify(file, opts) {
     var compiledTwig;
 
     try {
-      compiledTwig = compile(id, str);
+      compiledTwig = compileToObject(id, str);
     } catch(e) {
       return this.emit('error', e);
     }
 
-    this.push(process(compiledTwig));
+    this.push(process(compiledTwig, opts));
     next();
   }
 
