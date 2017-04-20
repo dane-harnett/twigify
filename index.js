@@ -3,6 +3,7 @@
 var twig    = require('twig').twig;
 var through = require('through2');
 var minify  = require('html-minifier').minify;
+var uuid = require('uuidjs');
 
 var ext = /\.(twig)$/;
 
@@ -15,7 +16,7 @@ function compile(id, str) {
   var minified = minify(str, minifyDefaults);
 
   var template = twig({
-    id: id,
+    id: id+'?uuid='+uuid.generate(),
     data: minified
   });
 
